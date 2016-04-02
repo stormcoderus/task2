@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>jQquery плагин trackCoords</title>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="libs/jquery/jquery.js"></script>
+	<script type="text/javascript" src="dist/jquery.trackCoords.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Привет мир!</h1>
+<div id="content"></div>
+<script type="text/javascript">
+	$(document).ready(function(){
+    	$('#content').trackCoords({url: 'save.php'});
+    });
+</script>
+</body>
+</html>
