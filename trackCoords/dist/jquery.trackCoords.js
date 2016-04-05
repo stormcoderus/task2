@@ -21,6 +21,8 @@ $(“div.container”).trackCoords({url: ‘/save.php’});
 
         var $this = $(this);
 
+        var lastTime = 0;
+
         var coordinates = {
             xPosition : 0,
             yPosition : 0,
@@ -40,37 +42,36 @@ $(“div.container”).trackCoords({url: ‘/save.php’});
                 coordinates.xPosition = event.pageX - $this.offset().left;
                 coordinates.yPosition = event.pageY - $this.offset().top;
                 // start mouse standing time
-                var time = Date.now();
-                coordinates.time = time;
+                lastTime = Date.now();
             });
         };
 
         var sendData = function() {
-            setInterval(function() {
-                $.ajax({
-                    type: 'POST',
-                    url: settings.url,
-                    data: {coordinates : coordinates},
-                        success: function(data) {
-                            console.log('ajax success! data = '+data);
-                        },
-                        error:  function(xhr, str){
-                            alert('Возникла ошибка: ' + xhr.responseCode+ str);
-                        }
-                });
-            }, settings.sendInterval);
+            $.ajax({
+                type: 'POST',
+                url: settings.url,
+                data: {coordinates : coordinates},
+                    success: function(data) {
+                        console.log('ajax success! data = '+data);
+                    },
+                    error:  function(xhr, str){
+                        alert('Возникла ошибка: ' + xhr.responseCode+ str);
+                    }
+            });
         }
 
         return this.each(function() {
+            lastTime = Date.now();
 
             setInterval(function() {
                 getMousePosition();
                 // getting mouse standing time
-                var time = Date.now();
-                coordinates.time = time - coordinates.time;
+                coordinates.time = parseInt(Date.now() - lastTime);
             }, settings.checkInterval);
 
-            sendData();
+            setInterval(function() {
+                sendData();
+            }, settings.sendInterval);
         });
 
     };
